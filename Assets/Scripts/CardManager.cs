@@ -19,7 +19,7 @@ public class CardManager : MonoBehaviour
 
 
     List<Item> itemBuffer;
-    List<Item> myDeck;
+    public List<Item> myDeck;
     public List<Card> discardDeck;
     public List<Card> drawcardDeck;
     Card selectedCard;
@@ -65,6 +65,11 @@ public class CardManager : MonoBehaviour
         MoveToDiscard();
         myCards.RemoveAt(0);
     }
+    public void SendToMyDeck()
+    {
+        drawcardDeck.Add(discardDeck[0]);
+        discardDeck.RemoveAt(0);
+    }
     public void MoveToDiscard()
     {
         Vector3 to = GameObject.Find("DiscardDeck").transform.position;
@@ -72,7 +77,7 @@ public class CardManager : MonoBehaviour
     }
     void SetUpMydeck()
     {
-        myDeck = new List<Item>(10);
+        myDeck = new List<Item>(100);
         for(int i=0;i<5;i++)
         {
             myDeck.Add(itemSO.items[0]);
@@ -139,18 +144,48 @@ public class CardManager : MonoBehaviour
     {
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
         var card = cardObject.GetComponent<Card>();
-        
-        if (canDraw)
+        int size = discardDeck.Count;
+
+        if (myDeck.Count != 0)
         {
-            card.Setup(PopCard());
-            myCards.Add(card);
-            SetOriginOrder();
-            CardAlignment();
+            if (canDraw)
+            {
+                card.Setup(PopCard());
+                myCards.Add(card);
+                SetOriginOrder();
+                CardAlignment();
+            }
+            else
+            {
+                Alert(1);
+                return;
+            }
         }
         else
         {
-            Alert(1);
-            return;
+            if(canDraw)
+            {
+                if(drawcardDeck.Count==0)
+                {
+                    for (int i = 0; i < size; i++)
+                    {
+                        SendToMyDeck();
+                    }
+                    myCards.Add(drawcardDeck[0]);
+                    drawcardDeck.RemoveAt(0);
+                    SetOriginOrder();
+                    CardAlignment();
+                }
+                myCards.Add(drawcardDeck[0]);
+                drawcardDeck.RemoveAt(0);
+                SetOriginOrder();
+                CardAlignment();
+            }
+            else
+            {
+                Alert(1);
+                return;
+            }
         }
     }
     void SetOriginOrder()
