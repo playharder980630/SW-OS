@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 455
-    y: 60
+    x: 146
+    y: 109
     width: 1170
     height: 951
   m_ShowMode: 4
-  m_Title: Console
+  m_Title: Hierarchy
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -495,8 +495,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1383
-    y: 90
+    x: 1074
+    y: 139
     width: 241
     height: 880
   m_ViewDataDictionary: {fileID: 0}
@@ -536,8 +536,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 455
-    y: 90
+    x: 146
+    y: 139
     width: 227
     height: 511
   m_ViewDataDictionary: {fileID: 0}
@@ -593,8 +593,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 683
-    y: 90
+    x: 374
+    y: 139
     width: 698
     height: 511
   m_ViewDataDictionary: {fileID: 0}
@@ -898,8 +898,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 455
-    y: 622
+    x: 146
+    y: 671
     width: 927
     height: 348
   m_ViewDataDictionary: {fileID: 0}
