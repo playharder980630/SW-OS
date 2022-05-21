@@ -72,17 +72,28 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            CardManager.Inst.AddCard(CardManager.Inst.CheckCardCount());
+            if (myTurn)
+            {
+                while (CardManager.Inst.myCards.Count < startCardCount)
+                {
+                    CardManager.Inst.AddCard(CardManager.Inst.CheckCardCount());
+                }
+            }
             yield return delay07;
             isLoading = false;
         }
     }
     public void EndTurn()
     {
+        if (myTurn)
+        {
+            int getC = CardManager.Inst.myCards.Count;
+            for (int i = 0; i < getC; i++)
+            {
+                CardManager.Inst.SendToDiscard();
+            }
+        }
         myTurn = !myTurn;
-        int getC = CardManager.Inst.myCards.Count;
-        for (int i = 0; i < getC; i++)
-            CardManager.Inst.SendToDiscard();
         StartCoroutine(StartTurnCo());
     }
 }

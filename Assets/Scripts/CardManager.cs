@@ -62,11 +62,13 @@ public class CardManager : MonoBehaviour
     public void SendToDiscard()
     {
         discardDeck.Add(myCards[0]);
+        MoveToDiscard();
         myCards.RemoveAt(0);
     }
-    public void MoveToDisCard()
+    public void MoveToDiscard()
     {
-
+        Vector3 to = GameObject.Find("DiscardDeck").transform.position;
+        myCards[0].transform.Translate(to);
     }
     void SetUpMydeck()
     {
@@ -133,7 +135,6 @@ public class CardManager : MonoBehaviour
             GameManager.Inst.Notification("카드가 너무 많습니다");
         }
     }
-
     public void AddCard(bool canDraw)
     {
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
