@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
+
 public class EntityManager : MonoBehaviour
 {
     public static EntityManager Inst { get; private set; }
@@ -10,18 +12,38 @@ public class EntityManager : MonoBehaviour
     [SerializeField] GameObject entityPrefab;
     [SerializeField] List<Entity> myEntities;
     [SerializeField] List<Entity> otherEntities;
+    [SerializeField] GameObject TargetPicker;
     [SerializeField] Entity myEmptyEntity;
     [SerializeField] Entity myBossEntity;
     [SerializeField] Entity otherBossEntity;
     const int MAX_ENTITY_COUNT = 6;
     public bool IsFullMyEntities => myEntities.Count >= MAX_ENTITY_COUNT && !ExistMyEmptyEntity;
     bool IsFullOtherEntities => otherEntities.Count >= MAX_ENTITY_COUNT;
+    bool ExistTargetPickEntity => targetPickEntity != null;
     bool ExistMyEmptyEntity => myEntities.Exists(x => x == myEmptyEntity);
     int MyEmptyEntityIndex => myEntities.FindIndex(x => x == myEmptyEntity);
     bool CanMouseInput => TurnManager.Inst.myTurn && !TurnManager.Inst.isLoading;
     Entity selectEntity;
     Entity targetPickEntity;
     WaitForSeconds delay1 = new WaitForSeconds(1);
+
+    void Start()
+    {
+        TurnManager.OnTurnStarted += OnTurnStarted;
+    }
+
+    void OnDestroy()
+    {
+        TurnManager.OnTurnStarted -= OnTurnStarted;
+    }
+
+    void OnTurnStarted(bool myTurn)
+    {
+        AttackableReset(myTurn);
+
+        if (!myTurn)
+            StartCoroutine(AICo());
+    }
     void EntityAlignment(bool isMine)
     {
         float targetY = isMine ? -4.35f : 4.15f;
@@ -80,8 +102,6 @@ public class EntityManager : MonoBehaviour
 
         if (isMine)
             myEntities[MyEmptyEntityIndex] = entity;
-        else
-            otherEntities.Insert(Random.Range(0, otherEntities.Count), entity);
 
         entity.isMine = isMine;
         entity.Setup(item);
@@ -103,6 +123,9 @@ public class EntityManager : MonoBehaviour
 
         if (!CanMouseInput)
             return;
+
+        selectEntity = null;
+        targetPickEntity = null;
     }
 
     public void EntityMouseDrag()
@@ -123,6 +146,26 @@ public class EntityManager : MonoBehaviour
         }
         if (!existTarget)
             targetPickEntity = null;
+    }
+
+    IEnumerator AICo()
+    {
+        CardManager.Inst.TryPutCard(false);
+        yield return delay1;
+
+        TurnManager.Inst.EndTurn();
+    }
+    void Update()
+    {
+        ShowTargetPicker(ExistTargetPickEntity);
+    }
+
+
+    void ShowTargetPicker(bool isShow)
+    {
+        TargetPicker.SetActive(isShow);
+        if (ExistTargetPickEntity)
+            TargetPicker.transform.position = targetPickEntity.transform.position;
     }
     public void AttackableReset(bool isMine)
     {
