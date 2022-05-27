@@ -199,7 +199,18 @@ public class EntityManager : MonoBehaviour
     {
         CardManager.Inst.TryPutCard(false);
         yield return delay1;
+        var attackers = otherBossEntity;
+       
+        var defenders = new List<Entity>(myEntities);
+        defenders.Add(myBossEntity);
+        int rand = UnityEngine.Random.Range(0, defenders.Count);
+        Attack(attackers, defenders[rand]);
 
+            if (TurnManager.Inst.isLoading)
+                yield break;
+
+            yield return delay2;
+        
         TurnManager.Inst.EndTurn();
     }
     void Update()
