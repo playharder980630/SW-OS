@@ -13,6 +13,7 @@ public class EntityManager : MonoBehaviour
     [SerializeField] List<Entity> myEntities;
     [SerializeField] List<Entity> otherEntities;
     [SerializeField] GameObject TargetPicker;
+    [SerializeField] GameObject damagePrefab;
     [SerializeField] Entity myEmptyEntity;
     [SerializeField] Entity myBossEntity;
     [SerializeField] Entity otherBossEntity;
@@ -26,7 +27,7 @@ public class EntityManager : MonoBehaviour
     Entity selectEntity;
     Entity targetPickEntity;
     WaitForSeconds delay1 = new WaitForSeconds(1);
-
+    WaitForSeconds delay2 = new WaitForSeconds(2);
     void Start()
     {
         TurnManager.OnTurnStarted += OnTurnStarted;
@@ -123,6 +124,8 @@ public class EntityManager : MonoBehaviour
 
         if (!CanMouseInput)
             return;
+        if (selectEntity && targetPickEntity && selectEntity.attackable)
+            Attack(selectEntity, targetPickEntity);
 
         selectEntity = null;
         targetPickEntity = null;
@@ -137,7 +140,7 @@ public class EntityManager : MonoBehaviour
         foreach (var hit in Physics2D.RaycastAll(Utils.MousePos, Vector3.forward))
         {
             Entity entity = hit.collider?.GetComponent<Entity>();
-            if (entity != null && !entity.isMine && selectEntity.attackable)
+            if (entity != null  && selectEntity.attackable)
             {
                 targetPickEntity = entity;
                 existTarget = true;
@@ -146,6 +149,50 @@ public class EntityManager : MonoBehaviour
         }
         if (!existTarget)
             targetPickEntity = null;
+    }
+    void Attack(Entity attacker, Entity defender)
+    {
+        attacker.attackable = false;
+        attacker.GetComponent<Order>().SetMostFrontOrder(true);
+
+        Sequence sequence = DOTween.Sequence()
+            .Append(attacker.transform.DOMove(defender.originPos, 0.4f)).SetEase(Ease.InSine)
+            .AppendCallback(() =>
+            {
+                attacker.Damaged(defender.attack);
+                defender.Damaged(attacker.attack);
+                SpawnDamage(defender.attack, attacker.transform);
+                SpawnDamage(attacker.attack, defender.transform);
+            })
+            .Append(attacker.transform.DOMove(attacker.originPos, 0.4f)).SetEase(Ease.OutSine)
+            .OnComplete(() => AttackCallback(attacker, defender));
+    }
+
+    void AttackCallback(params Entity[] entities)
+    {
+        // Á×À» »ç¶÷ °ñ¶ó¼­ Á×À½ Ã³¸®
+        entities[0].GetComponent<Order>().SetMostFrontOrder(false);
+
+        foreach (var entity in entities)
+        {
+            if (!entity.isDie || entity.isBossOrEmpty)
+                continue;
+
+            if (entity.isMine)
+                myEntities.Remove(entity);
+            else
+                otherEntities.Remove(entity);
+
+            Sequence sequence = DOTween.Sequence()
+                .Append(entity.transform.DOShakePosition(1.3f))
+                .Append(entity.transform.DOScale(Vector3.zero, 0.3f)).SetEase(Ease.OutCirc)
+                .OnComplete(() =>
+                {
+                    EntityAlignment(entity.isMine);
+                    Destroy(entity.gameObject);
+                });
+        }
+        StartCoroutine(CheckBossDie());
     }
 
     IEnumerator AICo()
@@ -171,5 +218,30 @@ public class EntityManager : MonoBehaviour
     {
         var targetEntites = isMine ? myEntities : otherEntities;
         targetEntites.ForEach(x => x.attackable = true);
+    }
+    void SpawnDamage(int damage, Transform tr)
+    {
+        if (damage <= 0)
+            return;
+
+        var damageComponent = Instantiate(damagePrefab).GetComponent<Damage>();
+        damageComponent.SetupTransform(tr);
+        damageComponent.Damaged(damage);
+    }
+    IEnumerator CheckBossDie()
+    {
+        yield return delay2;
+
+        if (myBossEntity.isDie)
+            StartCoroutine(GameManager.Inst.GameOver(false));
+
+        if (otherBossEntity.isDie)
+            StartCoroutine(GameManager.Inst.GameOver(true));
+    }
+    public void DamageBoss(bool isMine, int damage)
+    {
+        var targetBossEntity = isMine ? myBossEntity : otherBossEntity;
+        targetBossEntity.Damaged(damage);
+        StartCoroutine(CheckBossDie());
     }
 }

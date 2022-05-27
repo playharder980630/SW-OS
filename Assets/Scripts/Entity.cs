@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour
     public bool isBossOrEmpty;
     public bool attackable;
     public Vector3 originPos;
+
     int liveCount;
     void Start()
     {
@@ -74,5 +75,16 @@ public class Entity : MonoBehaviour
             liveCount++;
         
     }
+    public bool Damaged(int damage)
+    {
+        health -= damage;
+        healthTMP.text = health.ToString();
 
+        if (health <= 0)
+        {
+            isDie = true;
+            return true;
+        }
+        return false;
+    }
 }

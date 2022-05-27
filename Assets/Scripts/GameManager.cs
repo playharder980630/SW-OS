@@ -8,8 +8,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Inst {get;private set;}
     void Awake() => Inst = this;
 
+    WaitForSeconds delay2 = new WaitForSeconds(2);
+    [SerializeField] ResultPanel resultPanel;
     [SerializeField] NotificationPanel notificationPanel;
-    
+    [SerializeField] GameObject endTurnBtn;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,5 +48,14 @@ public class GameManager : MonoBehaviour
     public void Notification(string message)
     {
         notificationPanel.Show(message);
+    }
+    public IEnumerator GameOver(bool isMyWin)
+    {
+        TurnManager.Inst.isLoading = true;
+        endTurnBtn.SetActive(false);
+        yield return delay2;
+
+        TurnManager.Inst.isLoading = true;
+        resultPanel.Show(isMyWin ? "½Â¸®" : "ÆÐ¹è");
     }
 }
