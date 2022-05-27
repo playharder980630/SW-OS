@@ -28,6 +28,7 @@ public class CardManager : MonoBehaviour
     bool isOver;
     bool canDraw;
     int errorType;
+    int myPutCount;
     enum ECardState { Nothing, CanMouseOver,CanMouseDrag}
     public Item PopItem()
     {
@@ -245,6 +246,35 @@ public class CardManager : MonoBehaviour
             return results;
         }
     }
+    public bool TryPutCard(bool isMine)
+    {
+        if (isMine && myPutCount >= 1)
+            return false;
+
+        if (!isMine )
+            return false;
+
+        Card card = selectedCard;
+        var spawnPos =  Utils.MousePos ;
+        var targetCards = myCards ;
+
+        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos))
+        {
+            targetCards.Remove(card);
+            DestroyImmediate(card.gameObject);
+            if (isMine)
+            {
+                myPutCount++;
+            }
+            return true;
+        }
+        else
+        {
+            targetCards.ForEach(x => x.GetComponent<Order>().SetMostFrontOrder(false));
+            return false;
+        }
+    }
+
 
     #region MyCard
 
@@ -262,6 +292,8 @@ public class CardManager : MonoBehaviour
     }
     public void CardMouseDown()
     {
+        if (eCardState != ECardState.CanMouseDrag)
+            return;
         isMyCardDrag = true;
     }
     public void CardMouseUp()
@@ -270,6 +302,11 @@ public class CardManager : MonoBehaviour
 
         if (eCardState != ECardState.CanMouseDrag)
             return;
+
+        if (onMyCardArea)
+            EntityManager.Inst.RemoveMyEmptyEntity();
+        else
+            TryPutCard(true);
 
     }
     public bool CheckCardCount()
@@ -288,9 +325,13 @@ public class CardManager : MonoBehaviour
     }
     void CardDrag()
     {
-        if(!onMyCardArea)
+        if (eCardState != ECardState.CanMouseDrag)
+            return;
+
+        if (!onMyCardArea)
         {
-            selectedCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectedCard.originPRS.scale), false);           
+            selectedCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectedCard.originPRS.scale), false);
+            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x);
         }
     }
     void DetectedCardArea()
@@ -312,15 +353,18 @@ public class CardManager : MonoBehaviour
         }
         card.GetComponent<Order>().SetMostFrontOrder(isEnlarge);
     }
+
     void SetECardState()
     {
         if (TurnManager.Inst.isLoading)
             eCardState = ECardState.Nothing;
-        else if (TurnManager.Inst.myTurn)
-            eCardState = ECardState.CanMouseOver;
-        else if (TurnManager.Inst.myTurn)
-            eCardState = ECardState.CanMouseDrag;
 
+        else if (!TurnManager.Inst.myTurn || myPutCount == 1 || EntityManager.Inst.IsFullMyEntities)
+            eCardState = ECardState.CanMouseOver;
+
+        else if (TurnManager.Inst.myTurn && myPutCount == 0)
+            eCardState = ECardState.CanMouseDrag;
     }
+
     #endregion
 }
