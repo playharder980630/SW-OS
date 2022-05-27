@@ -118,11 +118,19 @@ public class CardManager : MonoBehaviour
     {
         SetUpMydeck();
         TurnManager.OnAddCard += AddCard;
+        TurnManager.OnTurnStarted += OnTurnStarted;
     }
     void OnDestroy()
     {
         SetUpMydeck();
         TurnManager.OnAddCard -= AddCard;
+        TurnManager.OnTurnStarted -= OnTurnStarted;
+    }
+    void OnTurnStarted(bool myTurn)
+    {
+        if (myTurn)
+            myPutCount = 0;
+
     }
     // Update is called once per frame
     void Update()

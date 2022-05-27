@@ -41,4 +41,22 @@ public class Entity : MonoBehaviour
         else
             transform.position = pos;
     }
+    void OnMouseDown()
+    {
+        if (isMine)
+            EntityManager.Inst.EntityMouseDown(this);
+    }
+
+    void OnMouseUp()
+    {
+        if (isMine)
+            EntityManager.Inst.EntityMouseUp();
+    }
+
+    void OnMouseDrag()
+    {
+        if (isMine)
+            EntityManager.Inst.EntityMouseDrag();
+    }
+
 }

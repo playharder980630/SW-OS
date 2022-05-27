@@ -22,6 +22,7 @@ public class TurnManager : MonoBehaviour
     WaitForSeconds delay05 = new WaitForSeconds(0.5f);
     WaitForSeconds delay07 = new WaitForSeconds(0.7f);
     public static Action<bool> OnAddCard;
+    public static event Action<bool> OnTurnStarted;
     void GameSetUp()
     {
         if (fastMode)
@@ -82,6 +83,7 @@ public class TurnManager : MonoBehaviour
             yield return delay07;
             isLoading = false;
         }
+        OnTurnStarted?.Invoke(myTurn);
     }
     public void EndTurn()
     {

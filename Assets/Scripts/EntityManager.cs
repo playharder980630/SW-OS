@@ -18,7 +18,10 @@ public class EntityManager : MonoBehaviour
     bool IsFullOtherEntities => otherEntities.Count >= MAX_ENTITY_COUNT;
     bool ExistMyEmptyEntity => myEntities.Exists(x => x == myEmptyEntity);
     int MyEmptyEntityIndex => myEntities.FindIndex(x => x == myEmptyEntity);
-
+    bool CanMouseInput => TurnManager.Inst.myTurn && !TurnManager.Inst.isLoading;
+    Entity selectEntity;
+    Entity targetPickEntity;
+    WaitForSeconds delay1 = new WaitForSeconds(1);
     void EntityAlignment(bool isMine)
     {
         float targetY = isMine ? -4.35f : 4.15f;
@@ -85,5 +88,45 @@ public class EntityManager : MonoBehaviour
         EntityAlignment(isMine);
 
         return true;
+    }
+    public void EntityMouseDown(Entity entity)
+    {
+
+        if (!CanMouseInput)
+            return;
+
+        selectEntity = entity;
+    }
+
+    public void EntityMouseUp()
+    {
+
+        if (!CanMouseInput)
+            return;
+    }
+
+    public void EntityMouseDrag()
+    {
+
+        if (!CanMouseInput|| selectEntity == null)
+            return;
+        bool existTarget = false;
+        foreach (var hit in Physics2D.RaycastAll(Utils.MousePos, Vector3.forward))
+        {
+            Entity entity = hit.collider?.GetComponent<Entity>();
+            if (entity != null && !entity.isMine && selectEntity.attackable)
+            {
+                targetPickEntity = entity;
+                existTarget = true;
+                break;
+            }
+        }
+        if (!existTarget)
+            targetPickEntity = null;
+    }
+    public void AttackableReset(bool isMine)
+    {
+        var targetEntites = isMine ? myEntities : otherEntities;
+        targetEntites.ForEach(x => x.attackable = true);
     }
 }
