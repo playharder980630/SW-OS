@@ -154,7 +154,6 @@ public class CardManager : MonoBehaviour
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
         var card = cardObject.GetComponent<Card>();
         int size = discardDeck.Count;
-
         if (myDeck.Count != 0)
         {
             if (canDraw)
@@ -272,7 +271,7 @@ public class CardManager : MonoBehaviour
             DestroyImmediate(card.gameObject);
             if (isMine)
             {
-                myPutCount++;
+                //myPutCount++;
             }
             return true;
         }

@@ -14,6 +14,7 @@ public class ResultPanel : MonoBehaviour
     {
         resultTMP.text = message;
         transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutQuad);
+        SceneManager.LoadScene("RewardScene");
     }
 
     public void Restart()
