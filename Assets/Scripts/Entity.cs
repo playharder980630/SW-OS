@@ -12,7 +12,9 @@ public class Entity : MonoBehaviour
     [SerializeField] TMP_Text nameTMP;
     [SerializeField] TMP_Text attackTMP;
     [SerializeField] TMP_Text healthTMP;
+    public static Entity Inst { get; private set; }
 
+    private void Awake() => Inst = this;
     public int attack;
     public int health;
     public bool isMine;
@@ -20,7 +22,6 @@ public class Entity : MonoBehaviour
     public bool isBossOrEmpty;
     public bool attackable;
     public Vector3 originPos;
-
     int liveCount;
     void Start()
     {
@@ -80,6 +81,37 @@ public class Entity : MonoBehaviour
         health -= damage;
         healthTMP.text = health.ToString();
 
+        if (health <= 0)
+        {
+            isDie = true;
+            return true;
+        }
+        return false;
+    }
+    public bool BossUpdate(int damage,int stagenumber)
+    {
+        health = 10 + 10 * stagenumber;
+        attack = 1 + 1 * stagenumber;
+        healthTMP.text = health.ToString();
+        attackTMP.text = attack.ToString();
+        if (stagenumber == 1)
+            nameTMP.text = "고블린";
+        else if (stagenumber == 2)
+            nameTMP.text = "오크";
+        else if (stagenumber == 3)
+            nameTMP.text = "오우거";
+        else if (stagenumber == 4)
+            nameTMP.text = "트롤";
+        else if (stagenumber == 5)
+            nameTMP.text = "험상궂은손님";
+        else if (stagenumber == 6)
+            nameTMP.text = "나가";
+        else if (stagenumber == 7)
+            nameTMP.text = "드래곤";
+        else if (stagenumber == 8)
+            nameTMP.text = "광전사";
+        Sprite[] sprites1 = Resources.LoadAll<Sprite>("Sprites");
+        character.sprite = sprites1[stagenumber-1];
         if (health <= 0)
         {
             isDie = true;

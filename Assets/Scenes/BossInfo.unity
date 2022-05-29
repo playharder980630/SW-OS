@@ -401,7 +401,7 @@ Transform:
   m_GameObject: {fileID: 87854769}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.65, y: -3.98, z: 0}
-  m_LocalScale: {x: 0.47488472, y: 0.6215082, z: 1}
+  m_LocalScale: {x: 2.516889, y: 2.6496642, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 703454825}
@@ -448,12 +448,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: aa17415e7b489ce4983184926350a2ff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a64acc3aada0f3849bf7579ce1606e65, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.2, y: 2.29}
+  m_Size: {x: 2.15, y: 2.34}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -730,7 +730,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 205471221}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle8
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1373,7 +1373,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 625847521}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2593,7 +2593,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 895841657}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle7
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3251,7 +3251,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1303579353}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle3
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3505,7 +3505,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1391898857}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle6
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3965,9 +3965,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "STAGE 5: \uD5D8\uC0C1\uAD82\uC740 \uC138 \uC190\uB2D8                         
-    HINT     : \uC774 \uBCF4\uC2A4\uB294 \uB3D9\uC2DC\uC5D0 \uC7A1\uC9C0 \uC54A\uC73C\uBA74
-    \uAC15\uD654 \uB429\uB2C8\uB2E4. "
+  m_text: "STAGE 5: \uD5D8\uC0C1\uAD82\uC740 \uC190\uB2D8                         
+    HINT     : \uC774 \uBCF4\uC2A4\uB294 \uD55C\uBC88\uC5D0 \uC5EC\uB7EC \uBC88 \uACF5\uACA9\uD569\uB2C8\uB2E4. "
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 315ac90474c4a3e46a9f562bb1da903c, type: 2}
   m_sharedMaterial: {fileID: -4149651613011034069, guid: 315ac90474c4a3e46a9f562bb1da903c, type: 2}
@@ -4921,7 +4920,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1811427603}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle4
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5067,7 +5066,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1825361404}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5411,7 +5410,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2070075603}
         m_TargetAssemblyTypeName: Change, Assembly-CSharp
-        m_MethodName: SceneChangeMapToBattle
+        m_MethodName: SceneChangeMapToBattle5
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

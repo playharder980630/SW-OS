@@ -17,12 +17,15 @@ public class EntityManager : MonoBehaviour
     [SerializeField] Entity myEmptyEntity;
     [SerializeField] Entity myBossEntity;
     [SerializeField] Entity otherBossEntity;
+    [SerializeField] Sprite[] sprites;
     const int MAX_ENTITY_COUNT = 6;
     public bool IsFullMyEntities => myEntities.Count >= MAX_ENTITY_COUNT && !ExistMyEmptyEntity;
     bool IsFullOtherEntities => otherEntities.Count >= MAX_ENTITY_COUNT;
     bool ExistTargetPickEntity => targetPickEntity != null;
     bool ExistMyEmptyEntity => myEntities.Exists(x => x == myEmptyEntity);
     int MyEmptyEntityIndex => myEntities.FindIndex(x => x == myEmptyEntity);
+    int BossAttackorDefence=0;
+    
     bool CanMouseInput => TurnManager.Inst.myTurn && !TurnManager.Inst.isLoading;
     Entity selectEntity;
     Entity targetPickEntity;
@@ -31,6 +34,9 @@ public class EntityManager : MonoBehaviour
     void Start()
     {
         TurnManager.OnTurnStarted += OnTurnStarted;
+
+        var targetBossEntity1 = otherBossEntity;
+        targetBossEntity1.BossUpdate(0,Change.StageNumberChange );
     }
 
     void OnDestroy()
@@ -204,9 +210,29 @@ public class EntityManager : MonoBehaviour
         var defenders = new List<Entity>(myEntities);
         defenders.Add(myBossEntity);
         int rand = UnityEngine.Random.Range(0, defenders.Count);
-        Attack(attackers, defenders[rand]);
+        if (BossAttackorDefence == 0 && Change.StageNumberChange != 7&&Change.StageNumberChange !=5)
+        {
+            Attack(attackers, defenders[rand]);
+            BossAttackorDefence = 1;
+        }
+        else if (Change.StageNumberChange == 5)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                rand = UnityEngine.Random.Range(0, defenders.Count);
+                yield return delay1;
+                Attack(attackers, defenders[rand]);
+            }
 
-            if (TurnManager.Inst.isLoading)
+        }
+        else
+        {
+            otherBossEntity.health = otherBossEntity.health + otherBossEntity.attack;
+            BossAttackorDefence = 0;
+        }
+        var targetBossEntity1 = otherBossEntity;
+        targetBossEntity1.Damaged(0);
+        if (TurnManager.Inst.isLoading)
                 yield break;
 
             yield return delay2;
@@ -247,12 +273,22 @@ public class EntityManager : MonoBehaviour
             StartCoroutine(GameManager.Inst.GameOver(false));
 
         if (otherBossEntity.isDie)
+        {
             StartCoroutine(GameManager.Inst.GameOver(true));
+        }
     }
     public void DamageBoss(bool isMine, int damage)
     {
         var targetBossEntity = isMine ? myBossEntity : otherBossEntity;
         targetBossEntity.Damaged(damage);
         StartCoroutine(CheckBossDie());
+    }
+    public void OtherBossChange(int StageNumber)
+    {
+            otherBossEntity.attack = 1+StageNumber;
+            otherBossEntity.health = 10 + 10*StageNumber;
+           
+
+        
     }
 }
