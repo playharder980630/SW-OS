@@ -12,9 +12,17 @@ public class ResultPanel : MonoBehaviour
 
     public void Show(string message)
     {
-        resultTMP.text = message;
-        transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutQuad);
-        SceneManager.LoadScene("RewardScene");
+        if (Change.StageNumberChange == 8 && message == "½Â¸®")
+        {
+            SceneManager.LoadScene("FinalWin");
+
+        }
+        else
+        {
+            resultTMP.text = message;
+            transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.InOutQuad);
+            SceneManager.LoadScene("RewardScene");
+        }
     }
 
     public void Restart()

@@ -7,10 +7,27 @@ public class Change : MonoBehaviour
 {
     
     public static int StageNumberChange;
+ 
+
+    public void GameQuit()
+    {
+            Application.Quit();
+    }
+
+
     public void SceneChangeMainToMap()
     {
         SceneManager.LoadScene("BossInfo");
 
+    }
+    public void SceneChangeBattleToMap()
+    {
+        SceneManager.LoadScene("BossInfo");
+
+    }
+    public void SceneChangeEndToMain()
+    {
+        SceneManager.LoadScene("MAIN MENU");
     }
     public void SceneChangeMapToBattle1()
     {

@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RewardScene.unity
     guid: afb3d92c982681443afb5020b12382c8
+  - enabled: 1
+    path: Assets/Scenes/FinalWin.unity
+    guid: fdb1a5a4f814f6642b33d1ef836f1755
   m_configObjects: {}
