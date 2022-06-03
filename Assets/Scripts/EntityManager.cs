@@ -294,6 +294,7 @@ public class EntityManager : MonoBehaviour
     }
     public void DamageBoss(bool isMine, int damage)
     {
+    //gamemanager 치트키 함수
         var targetBossEntity = isMine ? myBossEntity : otherBossEntity;
         targetBossEntity.Damaged(damage);
         StartCoroutine(CheckBossDie());
