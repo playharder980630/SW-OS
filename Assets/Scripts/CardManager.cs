@@ -146,7 +146,7 @@ public class CardManager : MonoBehaviour
     {
         if(errorType==1)
         {
-            GameManager.Inst.Notification("ī�尡 �ʹ� �����ϴ�");
+            GameManager.Inst.Notification("Ä«µå°¡ ³Ê¹« ¸¹½À´Ï´Ù");
         }
     }
     public void AddCard(bool canDraw)
@@ -265,7 +265,7 @@ public class CardManager : MonoBehaviour
         var spawnPos =  Utils.MousePos ;
         var targetCards = myCards ;
 
-        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos))
+        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos)) //스폰엔티티 함수를 통해 엔티티가 풀이아니라면 if문 실행
         {
             targetCards.Remove(card);
             DestroyImmediate(card.gameObject);
@@ -311,7 +311,7 @@ public class CardManager : MonoBehaviour
             return;
 
         if (onMyCardArea)
-            EntityManager.Inst.RemoveMyEmptyEntity();
+            EntityManager.Inst.RemoveMyEmptyEntity(); //카드Area가 내 손카드에 있다면 myemptyentity를 비워둔다
         else
             TryPutCard(true);
 
@@ -338,7 +338,7 @@ public class CardManager : MonoBehaviour
         if (!onMyCardArea)
         {
             selectedCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectedCard.originPRS.scale), false);
-            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x);
+            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x); //MyEmptyEntiy를 마우스x좌표에 따라 넣어준다.
         }
     }
     void DetectedCardArea()
