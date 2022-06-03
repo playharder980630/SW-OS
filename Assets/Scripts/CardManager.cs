@@ -1,35 +1,36 @@
-using System;
+using System;//Array ¾²±âÀ§ÇØ ¼³Á¤
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = UnityEngine.Random;//using System ½è´õ´Ï Random¿¡¼­ ¸ðÈ£ÇÑ ¼³Á¤ÀÌ¶õ ¿À·ù¶ß±æ·¡
+                                  //Random¿ª½Ã À¯´ÏÆ¼ ¿£Áø Random ¼³Á¤
 public class CardManager : MonoBehaviour
 {
     // Start is called before the first frame update
     public static CardManager Inst { get; private set; }
     void Awake() => Inst = this;
 
-    [SerializeField] ItemSO itemSO;
-    [SerializeField] GameObject cardPrefab;
-    public List<Card> myCards;
-    [SerializeField] Transform cardSpawnPoint;
-    [SerializeField] Transform myCardLeft;
-    [SerializeField] Transform myCardRight;
-    [SerializeField] ECardState eCardState;
+    [SerializeField] ItemSO itemSO;             //ItemSO º¯¼ö
+    [SerializeField] GameObject cardPrefab;     //Ä«µåÇÁ¸®ÆÕ ¹ÞÀ» º¯¼ö
+    public List<Card> myCards;                  //³ªÀÇ ÆÐ ¸®½ºÆ®
+    [SerializeField] Transform cardSpawnPoint;  //ÇÁ¸®ÆÕ »ý¼º À§Ä¡
+    [SerializeField] Transform myCardLeft;      //Ä«µå Á¤·Ä ½Ã ÇÊ¿äÇÑ ¿ÞÂÊ À§Ä¡
+    [SerializeField] Transform myCardRight;     //¿À¸¥ÂÊ À§Ä¡
+    [SerializeField] ECardState eCardState;     //ÇöÀç ³» Ä«µå »óÅÂ
 
 
-    List<Item> itemBuffer;
-    public List<Item> myDeck;
-    public List<Card> discardDeck;
-    public List<Card> drawcardDeck;
-    Card selectedCard;
-    bool isMyCardDrag;
-    bool onMyCardArea;
-    bool isOver;
-    bool canDraw;
-    int errorType;
-    int myPutCount;
-    enum ECardState { Nothing, CanMouseOver,CanMouseDrag}
+    List<Item> itemBuffer;                      //¾ÆÀÌÅÛ ¹öÆÛ
+    public List<Item> myDeck;                   //³» µ¦ ¾ÆÀÌÅÛ ¸®½ºÆ®
+    public List<Card> discardDeck;              //¹ö¸®´Â µ¦ ¸®½ºÆ®
+    public List<Card> drawcardDeck;             //µå·Î¿ì ¸®½ºÆ®
+    Card selectedCard;                          //¼±ÅÃµÈ Ä«µå
+    bool isMyCardDrag;                          //µå·¡±× »óÅÂ
+    bool onMyCardArea;                          //ÆÐ¿¡ À§Ä¡ÇÑ Áö ÆÇ´Ü
+    bool isOver;                                //³Ñ¾î°¬´Â Áö ÆÇ´Ü
+    bool canDraw;                               //µå·Î¿ì °¡´ÉÇÑÁö ÆÇ´Ü**º¸½ºÆÐÅÏÀ¸·Î Ãß°¡ÇÏ·ÁÇßÀ¸³ª ½ÇÆÐ
+    int errorType;                              //¿À·ù Å¸ÀÔ
+    int myPutCount;                             //¿£Æ¼Æ¼¿¡ Ä«µå ³õÀ» °¹¼ö
+    enum ECardState { Nothing, CanMouseOver,CanMouseDrag}       //Ä«µå »óÅÂ:¾Æ¹«°Íµµ ¾ÈÇÔ, Ä«µå¿¡ ¸¶¿ì½º ¿Ã¸², Ä«µå°¡ µå·¡±×ÇÔ
     public Item PopItem()
     {
         if(itemBuffer.Count==0)
@@ -40,13 +41,18 @@ public class CardManager : MonoBehaviour
         itemBuffer.RemoveAt(0);
         return item;
     }
+    //¾ÆÀÌÅÛ ¸®½ºÆ®¿¡¼­ ¾ÆÀÌÅÛ ÇÏ³ª °¡Á®¿À±â
     public Item PopCard()
     {
+        //³» ¾ÆÀÌÅÛ¸®½ºÆ®°¡ 0ÀÌ¸é
         if(myDeck.Count==0)
         {
+            //ÀÓ½Ã·Î ÁöÁ¤ÇÑ Ä«µå 10ÀåÀ» ÀúÀå
             SetUpMydeck();
         }
+        //¸®½ºÆ®¿¡¼­ Ã¹¹øÂ° ¾ÆÀÌÅÛ °¡Á®¿À±â
         Item card = myDeck[0];
+        //¾ÆÀÌÅÛ ¸®½ºÆ®¿¡¼­´Â Áö¿ì±â
         myDeck.RemoveAt(0);
         return card;
     }
@@ -60,35 +66,47 @@ public class CardManager : MonoBehaviour
         myCards.RemoveAt(0);
         return hand;
     }
+
+    //³» ÆÐ¿¡¼­ ¹ö¸®´Â µ¦À¸·Î º¸³»±â
     public void SendToDiscard()
     {
+        //³» ÆÐÀÇ Ä«µå¸¦ ÇÑÀå¾¿
         discardDeck.Add(myCards[0]);
+        //¹ö¸®´Â µ¦À¸·Î º¸³»±â
         MoveToDiscard();
         myCards.RemoveAt(0);
     }
     public void SendToMyDeck()
     {
+        //³» ¹ö¸®´Â µ¦¿¡ÀÖ´Â Ä«µå¸¦ ÀüºÎ µå·Î¿ì µ¦¿¡ ³Ö±â
         drawcardDeck.Add(discardDeck[0]);
         discardDeck.RemoveAt(0);
     }
     public void MoveToDiscard()
     {
+        //¹ö¸®´Â µ¦ À§Ä¡·Î
         Vector3 to = GameObject.Find("DiscardDeck").transform.position;
+        //³» ÆÐÀÇ Ä«µåµéÀ» ´Ù º¸³»±â
         myCards[0].transform.Translate(to);
     }
     void SetUpMydeck()
     {
         myDeck = new List<Item>(100);
+        //ÀÓÀÇ·Î µµÀûÄ«µå 5Àå°ú
         for(int i=0;i<5;i++)
         {
             myDeck.Add(itemSO.items[0]);
         }
+        //Àü»çÄ«µå 5ÀåÀ» ÀúÀå½ÃÅ°°í
         for (int i = 0; i < 5; i++)
         {
             myDeck.Add(itemSO.items[1]);
         }
+
+        //±×³É ÀúÀåÇÏ¸é ¶È°°Àº ¼ø¼­·Î ³ª¿À±â ¶§¹®¿¡
         for(int i=0;i<myDeck.Count;i++)
         {
+            //·£´ýÇÏ°Ô ¼ø¼­¸¦ ºÎ¿©ÇØ¼­ µ¦¿¡ ´Ù½Ã ³Ö±â
             int rand = Random.Range(i, myDeck.Count);
             Item temp = myDeck[i];
             myDeck[i] = myDeck[rand];
@@ -116,7 +134,9 @@ public class CardManager : MonoBehaviour
     }
     void Start()
     {
+        //½ÃÀÛÇÏ¸é µ¦ ¼³Á¤ÇÏ°í
         SetUpMydeck();
+        //ÅÏ ½ÃÀÛÇÏÀÚ¸¶ÀÚ µå·Î¿ìÇÏ±â
         TurnManager.OnAddCard += AddCard;
         TurnManager.OnTurnStarted += OnTurnStarted;
     }
@@ -135,50 +155,66 @@ public class CardManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //³»°¡ µå·Î¿ì °¡´ÉÇÏ´Ù¸é µå·Î¿ì
         if(isMyCardDrag)
             CardDrag();
-
+        //Ä«µå ¿µ¿ª °¨Áö
         DetectedCardArea();
+        //Ä«µå »óÅÂ ÁöÁ¤
         SetECardState();
     }
 
     public void Alert(int errorType)
     {
+        //errorType 1Àº Ä«µåÆÐ°¡ ´Ù Âù »óÅÂ
         if(errorType==1)
         {
-            GameManager.Inst.Notification("Ã„Â«ÂµÃ¥Â°Â¡ Â³ÃŠÂ¹Â« Â¸Â¹Â½Ã€Â´ÃÂ´Ã™");
+            GameManager.Inst.Notification("Ä«µå°¡ ³Ê¹« ¸¹½À´Ï´Ù");
         }
     }
     public void AddCard(bool canDraw)
     {
+        //Ä«µå ÇÁ¸®ÆÕ¿¡¼­ Ä«µå »ý¼ºÇÏ°í
         var cardObject = Instantiate(cardPrefab, cardSpawnPoint.position, Utils.QI);
+        //Ä«µå ÄÄÆ÷³ÍÆ® ¾ò¾î¿À±â
         var card = cardObject.GetComponent<Card>();
         int size = discardDeck.Count;
+        //¿ì¼±Àº ³» ¾ÆÀÌÅÛ ¸®½ºÆ®¿¡¼­ Ä«µå¸¦ °¡Á®¿À±â
         if (myDeck.Count != 0)
         {
+            //µå·Î¿ì °¡´ÉÇÏ´Ù¸é
             if (canDraw)
             {
+                //Ä«µå popÇØ¼­ Á¤º¸ ¼³Á¤ÇÏ±â
                 card.Setup(PopCard());
+                //³» ÆÐ·Î ¸¸µç Ä«µå °¡Á®¿À±â
                 myCards.Add(card);
+                //order ÃÖ¼±À§·Î ¼³Á¤
                 SetOriginOrder();
+                //Ä«µå Á¤·Ä
                 CardAlignment();
             }
             else
             {
+                //µå·Î¿ì ºÒ°¡´ÉÇÏ¸é ¿À·ù ¹®±¸ È£Ãâ
                 Alert(1);
                 return;
             }
         }
+        //¾ÆÀÌÅÛ ¸®½ºÆ®¿¡¼­ Ä«µå ´Ù ¸¸µé¾úÀ¸¸é
         else
         {
             if(canDraw)
             {
+                //µå·Î¿ì Ä«µå¿¡ Ä«µå¾øÀ¸¸é
                 if(drawcardDeck.Count==0)
                 {
                     for (int i = 0; i < size; i++)
                     {
+                        //¹ö¸®´Â µ¦¿¡¼­ Ä«µå ´Ù °¡Á®¿À±â
                         SendToMyDeck();
                     }
+                    //Ä«µå µå·Î¿ìÇÏ±â
                     myCards.Add(drawcardDeck[0]);
                     drawcardDeck.RemoveAt(0);
                     SetOriginOrder();
@@ -201,53 +237,68 @@ public class CardManager : MonoBehaviour
         int count = myCards.Count;
         for(int i=0;i<count;i++)
         {
+            //³» Ä«µå ¿ìšM¼øÀ§ Á¤ÇÏ±â
             var targetCard = myCards[i];
             targetCard?.GetComponent<Order>().SetOriginOrder(i);
         }
     }
     void CardAlignment()
     {
+        //pos,rot,scale ¸®½ºÆ® »ý¼º
         List<PRS> originCardPRS = new List<PRS>();
-        
+        //PRS´Â RoundAlignment¿¡ ÀÇÇØ »õ·Î ¼³Á¤µÊ
         originCardPRS = RoundAlignment(myCardLeft, myCardRight, myCards.Count, 0.5f, Vector3.one * 1.9f);
 
         var targetCards = myCards;
         for(int i=0;i<targetCards.Count;i++)
         {
             var targetCard = targetCards[i];
-
+            //¼³Á¤µÈ PRS¸¦ ³» ÆÐÀÇ Ä«µå¿¡ °¢°¢ ¼³Á¤
             targetCard.originPRS = originCardPRS[i];
+            //¼³Á¤µÈ Ä«µåµéÀº DotweenÀ» ÅëÇØ ¿òÁ÷ÀÓÀ» ´õ È¿°úÀûÀ¸·Î Ç¥Çö
             targetCard.MoveTransform(targetCard.originPRS, true, 0.7f);
         }
-
+        //ºÎÃ¤Çü½ÄÀ¸·Î Ä«µå ÆîÄ¡±â
         List<PRS> RoundAlignment(Transform leftTr,Transform rightTr, int objcount, float height, Vector3 scale)
         {
+            //Ä«µå ³õÀ» À§Ä¡
             float[] objLerps = new float[objcount];
+            //¹ÝÈ¯ÇÒ PRS
             List<PRS> results = new List<PRS>(objcount);
 
             switch(objcount)
             {
+                //¸¸¾à Ä«µå °³¼ö°¡ 3°³ ÀÌÇÏ¸é ÁöÁ¤ÇÑ À§Ä¡·Î ¼³Á¤
                 case 1: objLerps = new float[] { 0.5f }; break;
                 case 2: objLerps = new float[] { 0.27f, 0.73f }; break;
                 case 3: objLerps = new float[] { 0.1f, 0.5f, 0.9f }; break;
+                //±× ÀÌ»óÀÌ¸é Ä«µå À§Ä¡¸¦ 0~1·Î ¼³Á¤ÇÏ°í ±× »çÀÌ¿¡ Ä«µå ³Öµµ·Ï ¼³Á¤
                 default:
+                    // ÀÏÁ¤ÇÑ °£°ÝÀ¸·Î ¸Ö¾îÁ®ÀÖ¾î¾ßÇÏ¹Ç·Î ±ÕµîÇÏ°Ô ³ª´©°í
                     float interval = 1f / (objcount - 1);
+                    // Ä«µå ¼ø¼­º°·Î ³ª´« ¼ýÀÚ¸¦ °öÇØ À§Ä¡ ¼³Á¤
                     for (int i = 0; i < objcount; i++)
                         objLerps[i] = interval * i;
                     break;
             }
-
+            //Ä«µå È¸Àü ¼³Á¤
             for(int i=0;i<objcount;i++)
             {
+                //Ä«µå 3ÀåÀÌ¸é È¸Àü ¾øÀÌ ±×³É ¼³Á¤
                 var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
                 var targetRot = Utils.QI;
+                //4ÀåÀÌ»óÀÌ¶ó¸é
                 if(objcount>=4)
                 {
+                    //¿øÀÇ ¹æÁ¤½ÄÀ» ÀÌ¿ëÇØ È¸Àü½ÃÅ³ y ±¸ÇÏ±â+0.5¸¦ »©´Â ÀÌÀ¯´Â ¿ì¸®°¡ ÆÐÀÇ ±æÀÌ¸¦ 0~1·Î ¼³Á¤Çß±â ¶§¹®
                     float curve = Mathf.Sqrt(Mathf.Pow(height, 2) - Mathf.Pow(objLerps[i] - 0.5f, 2));
-                    curve = height >= 0 ? curve : -curve;
+                    //curve = height >= 0 ? curve : -curve;
+                    //ÇöÀç Ä«µåÀÇ y Áõ°¡½ÃÅ°±â
                     targetPos.y += curve;
+                    //Ä«µåÀÇ È¸ÀüÀº À¯´ÏÆ¼ ±â´É Áß quaternion.slerp¸¦ ÅëÇØ È¸ÀüÀ» ½ÇÇàÇÔ
                     targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
                 }
+                //º¯°æµÈ PRS¸¦ ¹ÝÈ¯
                 results.Add(new PRS(targetPos, targetRot, scale));
             }
             return results;
@@ -265,7 +316,7 @@ public class CardManager : MonoBehaviour
         var spawnPos =  Utils.MousePos ;
         var targetCards = myCards ;
 
-        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos)) //ìŠ¤í°ì—”í‹°í‹° í•¨ìˆ˜ë¥¼ í†µí•´ ì—”í‹°í‹°ê°€ í’€ì´ì•„ë‹ˆë¼ë©´ ifë¬¸ ì‹¤í–‰
+        if (EntityManager.Inst.SpawnEntity(isMine, card.item, spawnPos))
         {
             targetCards.Remove(card);
             DestroyImmediate(card.gameObject);
@@ -282,44 +333,54 @@ public class CardManager : MonoBehaviour
         }
     }
 
-
+    //³» Ä«µå ¿µ¿ª
     #region MyCard
-
+    //¸¶¿ì½º°¡ Ä«µå¿¡ ¿Ã¶ó¿À¸é
     public void CardMouseOver(Card card)
     {
+        //»ó´ëÅÏ¿¡ Ä«µå¸¦ ¸¸Áú ¼ö ¾ø°Ô ¼³Á¤
         if (eCardState==ECardState.Nothing)
             return;
+        //¼±ÅÃÇÒ Ä«µå·Î ¼³Á¤
         selectedCard = card;
+        //Ä«µå È®´ëÇÏ±â
         EnlargeCard(true, card);
     }
 
     public void CardMouseExit(Card card)
     {
+        //Ä«µå¿¡¼­ ³ª¿À¸é Ä«µå ´Ù½Ã Ãà¼Ò
         EnlargeCard(false, card);
     }
     public void CardMouseDown()
     {
+        //Ä«µå µå·Î¿ì°¡´É »óÅÂ ¾Æ´Ï¸é ³Ñ¾î°¡±â
         if (eCardState != ECardState.CanMouseDrag)
             return;
+        //µå·¡±× ÇÏ±â
         isMyCardDrag = true;
     }
+    //¸¶¿ì½º¸¦ ¶¼¸é
     public void CardMouseUp()
     {
+
         isMyCardDrag = false;
 
         if (eCardState != ECardState.CanMouseDrag)
             return;
-
         if (onMyCardArea)
-            EntityManager.Inst.RemoveMyEmptyEntity(); //ì¹´ë“œAreaê°€ ë‚´ ì†ì¹´ë“œì— ìžˆë‹¤ë©´ myemptyentityë¥¼ ë¹„ì›Œë‘”ë‹¤
+            EntityManager.Inst.RemoveMyEmptyEntity();
         else
             TryPutCard(true);
 
     }
+    //µå·Î¿ì °¡´ÉÇÑ Áö È®ÀÎ
     public bool CheckCardCount()
     {
+        //¸ðµç »óÈ²¿¡
         if (TurnManager.Inst.myTurn)
         {
+            //Ä«µå°¡ 5ÀåÀÌµÇ¸é µå·Î¿ì ºÒ°¡
             if (myCards.Count >= 5)
                 return false;
         }
@@ -330,46 +391,67 @@ public class CardManager : MonoBehaviour
         }
         return true;
     }
+    //Ä«µå µå·¡±× ÇÏ±â
     void CardDrag()
     {
         if (eCardState != ECardState.CanMouseDrag)
             return;
-
+        //³» ÆÐ ¿µ¿ªÀÌ ¾Æ´Ï¸é
         if (!onMyCardArea)
         {
+            //Ä«µå À§Ä¡ º¯°æÇÏ±â
             selectedCard.MoveTransform(new PRS(Utils.MousePos, Utils.QI, selectedCard.originPRS.scale), false);
-            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x); //MyEmptyEntiyë¥¼ ë§ˆìš°ìŠ¤xì¢Œí‘œì— ë”°ë¼ ë„£ì–´ì¤€ë‹¤.
+            EntityManager.Inst.InsertMyEmptyEntity(Utils.MousePos.x);
         }
     }
+    //Ä«µå ¿µ¿ª °¨Áö
     void DetectedCardArea()
     {
+        //¸¶¿ì½º À§Ä¡¿¡ z¹æÇâÀ¸·Î ·¹ÀÌ¸¦ ½÷¼­ ÀûÁßÇÑ Á¤º¸ ÀúÀå
         RaycastHit2D[] hits = Physics2D.RaycastAll(Utils.MousePos, Vector3.forward);
+        //´Ù¸¥ ¿ÀºêÁ§Æ®¿Í Ãæµ¹³ªÁö ¾Ê°Ô ³» Ä«µå¿µ¿ª ·¹ÀÌ¾î¸¦ ¹Þ¾Æ¼­
         int layer = LayerMask.NameToLayer("MyCardArea");
+        //·¹ÀÌÄ³½ºÆ® x°¡ Ãæµ¹ÇÑ ¿ÀºêÁ§Æ® ·¹ÀÌ¾î°¡ mycardArea layer¿Í °°Àº °Ô Á¸ÀçÇÏ¸é true ¹ÝÈ¯
         onMyCardArea = Array.Exists(hits, x => x.collider.gameObject.layer == layer);
     }
+    //Ä«µå È®´ëÇÏ±â
     void EnlargeCard(bool isEnlarge,Card card)
     {
+        //Ä«µå°¡ È®´ë °¡´ÉÇÏ´Ù¸é
         if(isEnlarge)
         {   
+            //È®´ëµÇ´Â À§Ä¡·Î ´Ù½Ã¼³Á¤,x´Â ±×´ë·Î µÎ°í y¸¸ À§Ä¡ Áõ°¡
+            //±Ùµ¥ z¸¦ ±×´ë·Î µÎ´Ï±î ÀÌ Ä«µå ¿·¿¡ÀÖ´Â Ä«µå°¡ ¼±ÅÃµÇ´Â ¿À·ù ¹ß»ý
+            //±×·¡¼­ z¿ª½Ã -10ÇØ¼­ ¿Ã·Á¼­ ¿À·ù ÇØ°á
             Vector3 enlargePos = new Vector3(card.originPRS.pos.x, -4.8f, -10f);
+            //Ä«µå¸¦ ¿òÁ÷ÀÌ´Âµ¥ dotweenÀº ¾È¾²°í º¯°æµÈ À§Ä¡¿Í Å©±â¸¦ Áõ°¡½ÃÄÑ¼­ ´Ù½Ã Àû¿ë
             card.MoveTransform(new PRS(enlargePos, Utils.QI, Vector3.one * 3.5f), false);
         }
+        //¸¶¿ì°¡ ¿ÀºêÁ§Æ®¸¦ ¹þ¾î³ª¼­ false·Î º¯°æµÇ¸é
         else
         {
+            //Ä«µå ´Ù½Ã ¿ø·¡ Å©±â·Î º¯°æ
             card.MoveTransform(card.originPRS, false);
         }
+        //¼±ÅÃµÇ¾î¼­ È®´ë µÆ´Ù´Â °ÍÀº Á¦ÀÏ ¾Õ¿¡¼­ º¸¿©¾ßÇÏ±â ¶§¹®¿¡
+        //ÀÓÀÇ·Î °¡Àå ¿ì¼±¼øÀ§·Î ¼³Á¤½ÃÅ´
         card.GetComponent<Order>().SetMostFrontOrder(isEnlarge);
     }
-
+    //Ä«µå »óÅÂ ¼³Á¤
     void SetECardState()
     {
+        //´ë±âÁßÀÏ ¶§ Ä«µå ¸¸Áö¸é °íÀå³ª¼­
         if (TurnManager.Inst.isLoading)
+            //±×³É ¾Æ¹«°Íµµ ¾ÈµÇ°Ô ¼³Á¤
             eCardState = ECardState.Nothing;
-
+        //³» ÇÊµå°¡ ´Ù Â÷°Å³ª ³» ÅÏÀÌ ¾Æ´Ï¸é
         else if (!TurnManager.Inst.myTurn || myPutCount == 1 || EntityManager.Inst.IsFullMyEntities)
+            //Ä«µå º¼ ¼ö¸¸ ÀÖ°Ô ÇÏ±â
             eCardState = ECardState.CanMouseOver;
-
+        //³» ÅÏ¿¡ Ä«µå ³¾ ¼ö ÀÖÀ¸¸é µå·¡±×ÇÏ´Âµ¥ ³¾ ¼ö ÀÖ´Â Á¶°ÇÀ» ¿ø·¡´Â ÄÚ½ºÆ®·Î ÆÇ´ÜÇÏ·ÁÇß´Âµ¥
+        //ÄÚ½ºÆ® ºÎºÐÀ» ±¸ÇöÇÏÁö ¸øÇØ¼­ ±×³É ÆÐ¿¡ ÀÖ´Â °Å ´Ù ³»µµ·Ï ¸¸µé¾ú½À´Ï´Ù.
         else if (TurnManager.Inst.myTurn && myPutCount == 0)
+            //±×·¡¼­ ±×³É ÇÊµå°¡ fullÀÌ ¾Æ´Ï¸é µå·¡±×´Â Ç×»ó °¡´ÉÇÕ´Ï´Ù.
             eCardState = ECardState.CanMouseDrag;
     }
 

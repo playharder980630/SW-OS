@@ -22,6 +22,7 @@ public class Entity : MonoBehaviour
     public bool isDie;
     public bool isBossOrEmpty;
     public bool attackable;
+    public int Class;
     public Vector3 originPos; // 카드 정렬을 표현하기위한 Vector
     int liveCount;
     void Start()
@@ -36,14 +37,15 @@ public class Entity : MonoBehaviour
     public void Setup(Item item)
     {
     // 카드 정보에 따라 카드 초기값 Setup
-        attack = item.attack;
-        health = item.health;
+        attack = item.health;
+        health = item.attack;
 
         this.item = item;
         character.sprite = this.item.sprite;
         nameTMP.text = this.item.name;
         attackTMP.text = attack.ToString();
         healthTMP.text = health.ToString();
+        Class = this.item.Class;
     }
     public void MoveTransform(Vector3 pos, bool useDotween, float dotweenTime = 0)
     {

@@ -20,12 +20,15 @@ public class EntityManager : MonoBehaviour
     [SerializeField] Sprite[] sprites;
     const int MAX_ENTITY_COUNT = 6; // 최대 스폰카드 수
     public bool IsFullMyEntities => myEntities.Count >= MAX_ENTITY_COUNT && !ExistMyEmptyEntity;
+    public int thief = 0;
+    public int warrior = 0;
     bool IsFullOtherEntities => otherEntities.Count >= MAX_ENTITY_COUNT;
     bool ExistTargetPickEntity => targetPickEntity != null;
     bool ExistMyEmptyEntity => myEntities.Exists(x => x == myEmptyEntity);
     int MyEmptyEntityIndex => myEntities.FindIndex(x => x == myEmptyEntity);
     int BossAttackorDefence=0;
-    
+    int Class;
+
     bool CanMouseInput => TurnManager.Inst.myTurn && !TurnManager.Inst.isLoading; // 내 턴일때만 작동 
     Entity selectEntity;
     Entity targetPickEntity;
@@ -115,10 +118,13 @@ public class EntityManager : MonoBehaviour
         var entity = entityObject.GetComponent<Entity>(); //빈 엔티티오브젝트에 엔티티의 정보를 업데이트하고 엔티티에 넣어주기
 
         if (isMine)
+        { 
             myEntities[MyEmptyEntityIndex] = entity; // 나의 엔티티리스트에 엔티티 추가
+        }
         
         entity.isMine = isMine;
         entity.Setup(item);
+        AddClass(entity.Class);
         EntityAlignment(isMine);
         //엔티티의 정보를 업데이트, 정렬
         return true;
@@ -195,7 +201,10 @@ public class EntityManager : MonoBehaviour
                 continue;
             //엔티티의 isDie를 체크 죽으면 넘어가고 아닐시 엔티티s배열에서 제거해줘야한다.
             if (entity.isMine)
-                myEntities.Remove(entity);    
+            {
+                myEntities.Remove(entity);
+                SubClass(entity.Class);
+            }
             else
                 otherEntities.Remove(entity);
 
@@ -298,5 +307,63 @@ public class EntityManager : MonoBehaviour
         var targetBossEntity = isMine ? myBossEntity : otherBossEntity;
         targetBossEntity.Damaged(damage);
         StartCoroutine(CheckBossDie());
+    }
+    public void CheckClass(int Class)
+    {
+        
+    }
+    public void AddClass(int Class)
+    {
+        switch (Class)
+        {
+            case 1:
+                thief++;
+                if (thief >= 3&&thief<4)
+                {
+                    for (int i = 0; i < myEntities.Count; i++)
+                        if (myEntities[i].Class == 1)
+                        {
+                            myEntities[i].attack += 2;
+                        }
+                }
+                break;
+            case 2:
+                warrior++;
+                if (warrior >= 2&& warrior<3)
+                {
+                    for (int i = 0; i < myEntities.Count; i++)
+                    {
+                        myEntities[i].health += 2;
+                    }
+                }
+                break;
+        }
+    }
+    public void SubClass(int Class)
+    {
+        switch (Class)
+        {
+            case 1:
+                thief--;
+                if (thief <= 2&&thief>1)
+                {
+                    for (int i = 0; i < myEntities.Count; i++)
+                        if (myEntities[i].Class == 1)
+                        {
+                            myEntities[i].attack -= 2;
+                        }
+                }
+                break;
+            case 2:
+                warrior--;
+                if (warrior < 2&&warrior>=1)
+                {
+                    for (int i = 0; i < myEntities.Count; i++)
+                    {
+                        myEntities[i].health -= 2;
+                    }
+                }
+                break;
+        }
     }
 }
