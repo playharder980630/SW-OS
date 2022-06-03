@@ -53,6 +53,7 @@ public class Entity : MonoBehaviour
         else
             transform.position = pos;
     }
+    // 마우스 다운 , 업 , 드래그시 엔티티 매니저에서 해당 함수를 호출해 작동
     void OnMouseDown()
     {
         if (isMine)
