@@ -271,7 +271,7 @@ public class EntityManager : MonoBehaviour
     }
     void SpawnDamage(int damage, Transform tr)
     {
-        damage 오브젝트를 스폰하는 함수
+        //damage 오브젝트를 스폰하는 함수
         if (damage <= 0)
             return;
 
