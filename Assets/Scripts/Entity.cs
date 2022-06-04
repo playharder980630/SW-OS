@@ -37,8 +37,8 @@ public class Entity : MonoBehaviour
     public void Setup(Item item)
     {
     // 카드 정보에 따라 카드 초기값 Setup
-        attack = item.health;
-        health = item.attack;
+        attack = item.attack;
+        health = item.health;
 
         this.item = item;
         character.sprite = this.item.sprite;
@@ -94,6 +94,11 @@ public class Entity : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public void ClassUpdate()
+    {
+        healthTMP.text = health.ToString();
+        attackTMP.text = attack.ToString();
     }
     public bool BossUpdate(int damage,int stagenumber)
     {

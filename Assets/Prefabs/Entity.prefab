@@ -757,16 +757,17 @@ MonoBehaviour:
     health: 0
     sprite: {fileID: 0}
     percent: 0
+    Class: 0
   entity: {fileID: 3370889761613162990}
   character: {fileID: 3370889760788247915}
   nameTMP: {fileID: 3370889761517036175}
   attackTMP: {fileID: 3370889760029671316}
   healthTMP: {fileID: 3370889760970814647}
-  sleepParticle: {fileID: 0}
   attack: 0
   health: 0
   isMine: 0
   isDie: 0
   isBossOrEmpty: 0
   attackable: 0
+  Class: 0
   originPos: {x: 0, y: 0, z: 0}

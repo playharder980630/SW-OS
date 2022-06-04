@@ -126,6 +126,7 @@ public class EntityManager : MonoBehaviour
         entity.Setup(item);
         AddClass(entity.Class);
         EntityAlignment(isMine);
+        entity.ClassUpdate();
         //엔티티의 정보를 업데이트, 정렬
         return true;
     }

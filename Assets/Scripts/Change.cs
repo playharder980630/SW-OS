@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 public class Change : MonoBehaviour
 {
     
-    public static int StageNumberChange;
- 
+    public static int StageNumberChange=0;
+    
 
     public void GameQuit()
     {
@@ -37,15 +37,21 @@ public class Change : MonoBehaviour
     }
     public void SceneChangeMapToBattle2()
     {
-        StageNumberChange = 2;
+        if (StageNumberChange == 1)
+        {
+            StageNumberChange = 2;
 
-        SceneManager.LoadScene("BattleScene");
+            SceneManager.LoadScene("BattleScene");
+        }
     }
     public void SceneChangeMapToBattle3()
     {
-        StageNumberChange = 3;
+        if (StageNumberChange == 2)
+        {
+            StageNumberChange = 3;
 
-        SceneManager.LoadScene("BattleScene");
+            SceneManager.LoadScene("BattleScene");
+        }
     }
 
     public void SceneChangeMapToBattle4()

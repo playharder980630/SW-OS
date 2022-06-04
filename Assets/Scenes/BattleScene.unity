@@ -380,6 +380,7 @@ MonoBehaviour:
     health: 0
     sprite: {fileID: 0}
     percent: 0
+    Class: 0
   entity: {fileID: 0}
   character: {fileID: 0}
   nameTMP: {fileID: 0}
@@ -391,6 +392,7 @@ MonoBehaviour:
   isDie: 0
   isBossOrEmpty: 1
   attackable: 0
+  Class: 0
   originPos: {x: 0, y: 0, z: 0}
 --- !u!1 &189927702
 GameObject:
@@ -496,6 +498,7 @@ MonoBehaviour:
     health: 0
     sprite: {fileID: 0}
     percent: 0
+    Class: 0
   entity: {fileID: 0}
   character: {fileID: 0}
   nameTMP: {fileID: 0}
@@ -507,6 +510,7 @@ MonoBehaviour:
   isDie: 0
   isBossOrEmpty: 1
   attackable: 0
+  Class: 0
   originPos: {x: 0.23, y: -12.5242, z: 0}
 --- !u!61 &189927706
 BoxCollider2D:
@@ -1956,12 +1960,13 @@ MonoBehaviour:
   myEntities: []
   otherEntities: []
   TargetPicker: {fileID: 488778647}
-  damagePrefab: {fileID: 5563337824501316808, guid: 4d82e81a08f4afd488ce80a09fcc4034, type: 3}
+  damagePrefab: {fileID: 3261730308077241293, guid: 4d82e81a08f4afd488ce80a09fcc4034, type: 3}
   myEmptyEntity: {fileID: 176247150}
   myBossEntity: {fileID: 189927705}
   otherBossEntity: {fileID: 801988376}
   sprites: []
-  change: {fileID: 1904336240}
+  thief: 0
+  warrior: 0
 --- !u!4 &1306982591
 Transform:
   m_ObjectHideFlags: 0
@@ -2649,7 +2654,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348cb9f79eca359409ef8ff2414bc0b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StageNumberChange: 0
 --- !u!4 &1904336242
 Transform:
   m_ObjectHideFlags: 0
