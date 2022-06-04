@@ -325,6 +325,7 @@ public class EntityManager : MonoBehaviour
                         if (myEntities[i].Class == 1)
                         {
                             myEntities[i].attack += 2;
+                            myEntities[i].ClassUpdate();
                         }
                 }
                 break;
@@ -335,6 +336,7 @@ public class EntityManager : MonoBehaviour
                     for (int i = 0; i < myEntities.Count; i++)
                     {
                         myEntities[i].health += 2;
+                        myEntities[i].ClassUpdate();
                     }
                 }
                 break;
@@ -352,6 +354,7 @@ public class EntityManager : MonoBehaviour
                         if (myEntities[i].Class == 1)
                         {
                             myEntities[i].attack -= 2;
+                            myEntities[i].ClassUpdate();
                         }
                 }
                 break;
@@ -362,6 +365,7 @@ public class EntityManager : MonoBehaviour
                     for (int i = 0; i < myEntities.Count; i++)
                     {
                         myEntities[i].health -= 2;
+                        myEntities[i].ClassUpdate();
                     }
                 }
                 break;
